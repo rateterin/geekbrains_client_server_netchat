@@ -25,9 +25,5 @@
 """
 
 
-import chardet
-
-
-with open('test_file.txt', 'rb') as f:
-    for line in f.readlines():
-        print(line.decode(chardet.detect(line)['encoding']))
+with open('test_file.txt', 'r', encoding='utf8', errors='replace') as f:
+    print(f.read())
