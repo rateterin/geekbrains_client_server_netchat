@@ -34,3 +34,24 @@ def send_message(sock, message):
     json_message = json.dumps(message)
     encoded_message = json_message.encode(ENCODING)
     sock.send(encoded_message)
+
+
+def validate_host(host, logger):
+    octets = host.split('.')
+    if all(octet.isdecimal() for octet in octets) and all(0 <= int(octet) <= 255 for octet in octets):
+        pass
+    else:
+        logger.error('Не корректный адрес в параметрах запуска. Завершение.')
+        print('Указан не корректный ip-адрес в параметрах запуска')
+        print()
+        exit(1)
+
+
+def validate_port(port, logger):
+    if 1024 <= port <= 65535:
+        pass
+    else:
+        logger.error('Не корректный порт в параметрах запуска. Завершение.')
+        print('В качестве порта следует указать целое число от 1024 до 65535!')
+        print()
+        exit(1)

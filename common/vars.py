@@ -1,6 +1,12 @@
+import logging
+
+
 MAX_USERS = 99
 BUFFER_SIZE = 1024
 ENCODING = 'utf-8'
+DEFAULT_ADDRESS = '127.0.0.1'
+DEFAULT_PORT = 7777
+LOG_LEVEL = logging.DEBUG
 
 # Протокол JIM основные ключи:
 ACTION = 'action'
