@@ -8,19 +8,23 @@ from common.vars import MAX_USERS, authorised_users, ACTION, PRESENCE, TIME, USE
     DEFAULT_ADDRESS, DEFAULT_PORT
 from common.funcs import get_message, send_message, validate_host, validate_port
 from log.conf import server_log_config
+from log.decorators import log
 
 
-SERVER_LOG = logging.getLogger('server_logger')
+logger = logging.getLogger('server.py')
 
 
+@log
 def __error_400():
     return {RESPONSE: 400, ERROR: 'Bad request'}
 
 
+@log
 def __error_500():
     return {RESPONSE: 500, TIME: timestamp()}
 
 
+@log
 def response(arg):
     if ACTION in arg and arg[ACTION] == PRESENCE and \
             TIME in arg and \
@@ -29,20 +33,20 @@ def response(arg):
         try:
             test_time = float(arg[TIME])
         except ValueError:
-            SERVER_LOG.warning('Время в запросе не корректно')
+            logger.warning('Время в запросе не корректно')
             return __error_400()
         else:
             if test_time < 0:
-                SERVER_LOG.warning('Время в запросе не корректно')
+                logger.warning('Время в запросе не корректно')
                 return __error_400()
             resp = {RESPONSE: 200}
-            SERVER_LOG.info('Сообщение от клиента успешно декодировано. Возвращаем клиенту 200')
+            logger.info('Сообщение от клиента успешно декодировано. Возвращаем клиенту 200')
             print()
             print('Send response to client:')
             print(resp)
             return resp
-    SERVER_LOG.warning('Запрос от клиента не корректен. Возвращаем клиенту 400')
-    SERVER_LOG.debug(arg)
+    logger.warning('Запрос от клиента не корректен. Возвращаем клиенту 400')
+    logger.debug(arg)
     return __error_400()
 
 
@@ -56,28 +60,29 @@ def main():
     port = namespace.p
 
     if host:
-        validate_host(host, SERVER_LOG)
-    validate_port(port, SERVER_LOG)
+        validate_host(host, logger)
+    validate_port(port, logger)
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.bind((host, port))
     sock.listen(MAX_USERS)
-    SERVER_LOG.info('Сервер запущен.')
+    logger.info('Сервер запущен')
+    logger.info('Сервер запущен.')
     if host:
-        SERVER_LOG.info(f'Сервер принимает подключения на порту {port} адреса {host}')
+        logger.info(f'Сервер принимает подключения на порту {port} адреса {host}')
     else:
-        SERVER_LOG.info(f'Сервер принимает подключения на порту {port} всех доступных адресов')
+        logger.info(f'Сервер принимает подключения на порту {port} всех доступных адресов')
     while True:
         conn, addr = sock.accept()
-        SERVER_LOG.info('Принято соединение от клиента')
-        SERVER_LOG.debug(addr)
+        logger.info('Принято соединение от клиента')
+        logger.debug(addr)
         try:
             client_msg = get_message(conn)
         except (ValueError, json.JSONDecodeError):
-            SERVER_LOG.warning('Во время приема сообщения от клиента возникла ошибка.')
-            SERVER_LOG.debug(f'Клиент {addr}')
+            logger.warning('Во время приема сообщения от клиента возникла ошибка.')
+            logger.debug(f'Клиент {addr}')
         else:
-            SERVER_LOG.info('Принято сообщение от клиента.')
+            logger.info('Принято сообщение от клиента.')
             print()
             print('Received message from client:')
             print(client_msg)

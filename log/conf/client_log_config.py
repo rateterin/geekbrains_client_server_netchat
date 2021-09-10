@@ -13,7 +13,7 @@ LOG_TO_STDERR.setFormatter(CLIENT_FORMATTER)
 LOG_TO_STDERR.setLevel(logging.DEBUG)
 LOG_TO_FILE = logging.FileHandler(log_file, encoding=ENCODING)
 LOG_TO_FILE.setFormatter(CLIENT_FORMATTER)
-log = logging.getLogger('client_logger')
+log = logging.getLogger('client.py')
 log.addHandler(LOG_TO_FILE)
 log.setLevel(LOG_LEVEL)
 

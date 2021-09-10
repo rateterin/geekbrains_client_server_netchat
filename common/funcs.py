@@ -1,7 +1,11 @@
 import json
 from common.vars import BUFFER_SIZE, ENCODING
+from log.conf import server_log_config
+from log.conf import client_log_config
+from log.decorators import log
 
 
+@log
 def get_message(client):
     """
     Утилита приёма и декодирования сообщения
@@ -20,6 +24,7 @@ def get_message(client):
     raise ValueError
 
 
+@log
 def send_message(sock, message):
     """
     Утилита кодирования и отправки сообщения
@@ -36,6 +41,7 @@ def send_message(sock, message):
     sock.send(encoded_message)
 
 
+@log
 def validate_host(host, logger):
     octets = host.split('.')
     if all(octet.isdecimal() for octet in octets) and all(0 <= int(octet) <= 255 for octet in octets):
@@ -47,6 +53,7 @@ def validate_host(host, logger):
         exit(1)
 
 
+@log
 def validate_port(port, logger):
     if 1024 <= port <= 65535:
         pass

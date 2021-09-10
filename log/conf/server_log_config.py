@@ -14,7 +14,7 @@ LOG_TO_STDERR.setFormatter(SERVER_FORMATTER)
 LOG_TO_STDERR.setLevel(logging.DEBUG)
 LOG_TO_FILE = logging.handlers.TimedRotatingFileHandler(log_file, encoding=ENCODING, interval=1, when='midnight')
 LOG_TO_FILE.setFormatter(SERVER_FORMATTER)
-log = logging.getLogger('server_logger')
+log = logging.getLogger('server.py')
 log.addHandler(LOG_TO_FILE)
 log.setLevel(LOG_LEVEL)
 

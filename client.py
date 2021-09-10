@@ -6,16 +6,19 @@ from time import time as timestamp
 from common.vars import ACTION, PRESENCE, TIME, USER, ACCOUNT_NAME, RESPONSE, ERROR, DEFAULT_ADDRESS, DEFAULT_PORT
 from common.funcs import get_message, send_message, validate_host, validate_port
 from log.conf import client_log_config
+from log.decorators import log
 
 
-CLIENT_LOG = logging.getLogger('client_logger')
+logger = logging.getLogger('client.py')
 
 
+@log
 def presence_message(account_name: str = 'Guest'):
     msg = {ACTION: PRESENCE, TIME: timestamp(), USER: {ACCOUNT_NAME: account_name}}
     return msg
 
 
+@log
 def parse_response(response):
     if RESPONSE in response:
         print(response)
@@ -34,29 +37,30 @@ def main():
     host = namespace.addr
     port = namespace.port
 
-    validate_host(host, CLIENT_LOG)
+    validate_host(host, logger)
 
-    validate_port(port, CLIENT_LOG)
+    validate_port(port, logger)
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    logger.info('Клиент запущен')
     try:
         sock.connect((host, port))
     except ConnectionRefusedError as e:
-        CLIENT_LOG.critical('Не удалось подключиться к серверу! Завершение.')
+        logger.critical('Не удалось подключиться к серверу! Завершение.')
         exit(e.errno)
     else:
-        CLIENT_LOG.info('Успешное подключение к серверу.')
+        logger.info('Успешное подключение к серверу.')
     msg_to_server = presence_message()
     send_message(sock, msg_to_server)
-    CLIENT_LOG.info('На сервер отправлено сообщение-присутствия')
-    CLIENT_LOG.debug(msg_to_server)
+    logger.info('На сервер отправлено сообщение-присутствия')
+    logger.debug(msg_to_server)
     try:
         print(parse_response(get_message(sock)))
     except ValueError:
-        CLIENT_LOG.error('При декодировании сообщения от сервера возникли проблемы. Завершение.')
+        logger.error('При декодировании сообщения от сервера возникли проблемы. Завершение.')
         exit(1)
     else:
-        CLIENT_LOG.info('Успешно декодировано сообщение от сервера.')
+        logger.info('Успешно декодировано сообщение от сервера.')
 
 
 if __name__ == '__main__':
