@@ -12,6 +12,7 @@ LOG_LEVEL = logging.DEBUG
 ACTION = 'action'
 TIME = 'time'
 USER = 'user'
+MESSAGE = 'msg'
 ACCOUNT_NAME = 'account_name'
 
 # Прочие ключи, используемые в протоколе
@@ -20,4 +21,5 @@ RESPONSE = 'response'
 ERROR = 'error'
 
 # Сервер хранит тут имена аккаунтов авторизованных пользователей
-authorised_users = {'Guest'}
+authorised_users = ['Guest']
+users_sockets = [None]

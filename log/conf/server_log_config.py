@@ -18,6 +18,8 @@ log = logging.getLogger('server.py')
 log.addHandler(LOG_TO_FILE)
 log.setLevel(LOG_LEVEL)
 
+log.addHandler(LOG_TO_STDERR)
+
 
 if __name__ == '__main__':
     log.addHandler(LOG_TO_STDERR)
